@@ -79,9 +79,7 @@ export class FindTraces implements Tool {
         };
     }
 
-    private _normalizeAttributes(
-        attributes: string
-    ): { [k: string]: string } {
+    private _normalizeAttributes(attributes: string): { [k: string]: string } {
         const normalizedAttributes: { [k: string]: string } = {};
         if (attributes && attributes.trim()) {
             const pairs = attributes.split(',');
