@@ -12,9 +12,7 @@ export const tools: Tool[] = [
     new FindTraces(),
 ];
 
-export const httpOnlyTools: Tool[] = [
-    new GetServiceGraph(),
-];
+export const httpOnlyTools: Tool[] = [new GetServiceGraph()];
 
 export function getTools(isGRPC: boolean): Tool[] {
     return isGRPC ? tools : [...tools, ...httpOnlyTools];

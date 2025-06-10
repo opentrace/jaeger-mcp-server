@@ -25,5 +25,7 @@ export interface JaegerClient {
     ): Promise<GetOperationsResponse>;
     getTrace(request: GetTraceRequest): Promise<GetTraceResponse>;
     findTraces(request: FindTracesRequest): Promise<FindTracesResponse>;
-    getServiceGraph(request: GetServiceGraphRequest): Promise<GetServiceGraphResponse>
+    getServiceGraph(
+        request: GetServiceGraphRequest
+    ): Promise<GetServiceGraphResponse>;
 }

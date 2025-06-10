@@ -5,28 +5,33 @@ const BANNER_BG_COLOR = '#628816';
 const BANNER_TEXT_COLOR = '#5ECAE0';
 
 export enum LogLevel {
-  DEBUG = 0,
-  INFO = 1,
-  WARN = 2,
-  ERROR = 3,
-  NONE = 4
+    DEBUG = 0,
+    INFO = 1,
+    WARN = 2,
+    ERROR = 3,
+    NONE = 4,
 }
 
 export function parseLogLevel(levelStr?: string): LogLevel {
-  if (!levelStr) {
-      return LogLevel.NONE;
-  }
-  
-  const normalized = levelStr.toLowerCase().trim();
-  
-  switch (normalized) {
-    case 'debug': return LogLevel.DEBUG;
-    case 'info': return LogLevel.INFO;
-    case 'warn': return LogLevel.WARN;
-    case 'error': return LogLevel.ERROR;
-    case 'none':
-    default: return LogLevel.NONE;
-  }
+    if (!levelStr) {
+        return LogLevel.NONE;
+    }
+
+    const normalized = levelStr.toLowerCase().trim();
+
+    switch (normalized) {
+        case 'debug':
+            return LogLevel.DEBUG;
+        case 'info':
+            return LogLevel.INFO;
+        case 'warn':
+            return LogLevel.WARN;
+        case 'error':
+            return LogLevel.ERROR;
+        case 'none':
+        default:
+            return LogLevel.NONE;
+    }
 }
 
 // Initialize log level from environment
@@ -75,7 +80,7 @@ export function debug(...args: any[]): void {
     if (currentLogLevel > LogLevel.DEBUG) {
         return;
     }
-    
+
     console.debug(
         chalk.bgHex(BANNER_BG_COLOR).hex(BANNER_TEXT_COLOR)(BANNER_TEXT),
         _timeAsString(),
@@ -90,7 +95,7 @@ export function info(...args: any[]): void {
     if (currentLogLevel > LogLevel.INFO) {
         return;
     }
-    
+
     console.info(
         chalk.bgHex(BANNER_BG_COLOR).hex(BANNER_TEXT_COLOR)(BANNER_TEXT),
         _timeAsString(),
@@ -105,7 +110,7 @@ export function warn(...args: any[]): void {
     if (currentLogLevel > LogLevel.WARN) {
         return;
     }
-    
+
     console.warn(
         chalk.bgHex(BANNER_BG_COLOR).hex(BANNER_TEXT_COLOR)(BANNER_TEXT),
         _timeAsString(),
@@ -120,7 +125,7 @@ export function error(...args: any[]): void {
     if (currentLogLevel > LogLevel.ERROR) {
         return;
     }
-    
+
     console.error(
         chalk.bgHex(BANNER_BG_COLOR).hex(BANNER_TEXT_COLOR)(BANNER_TEXT),
         _timeAsString(),

@@ -35,7 +35,11 @@ export class JaegerHttpClient implements JaegerClient {
         this.authorizationHeader = clientConfigurations.authorizationHeader;
     }
 
-    private static _normalizeUrl(url: string, port?: number, allowDefaultPort?: boolean): string {
+    private static _normalizeUrl(
+        url: string,
+        port?: number,
+        allowDefaultPort?: boolean
+    ): string {
         const schemaIdx: number = url.indexOf(URL_SCHEMA_SEPARATOR);
         if (schemaIdx < 0) {
             if (port === SECURE_URL_PORT) {
@@ -46,7 +50,7 @@ export class JaegerHttpClient implements JaegerClient {
         }
 
         if (port) {
-            url = `${url}:${port}`
+            url = `${url}:${port}`;
         } else if (allowDefaultPort) {
             port = url.startsWith(SECURE_URL_SCHEMA)
                 ? SECURE_URL_PORT
@@ -58,15 +62,12 @@ export class JaegerHttpClient implements JaegerClient {
     }
 
     private async _get<R>(path: string, params?: any): Promise<R> {
-        const response: AxiosResponse = await axios.get(
-            `${this.url}${path}`,
-            {
-                params,
-                headers: {
-                    Authorization: this.authorizationHeader,
-                },
-            }
-        );
+        const response: AxiosResponse = await axios.get(`${this.url}${path}`, {
+            params,
+            headers: {
+                Authorization: this.authorizationHeader,
+            },
+        });
         if (response.status != 200) {
             throw new Error(
                 `Request failed with status code ${response.status}`
@@ -232,24 +233,29 @@ export class JaegerHttpClient implements JaegerClient {
                 'query.search_depth': request.query.searchDepth,
             });
             return {
-                resourceSpans: this._normalizeResourceSpans(
-                    httpResponse.result.resourceSpans
-                ),
+                // returns {"result":{}} if no traces found
+                resourceSpans: httpResponse.result.resourceSpans
+                    ? this._normalizeResourceSpans(
+                          httpResponse.result.resourceSpans
+                      )
+                    : [],
             };
         } catch (err: any) {
             return this._handleError(err);
         }
     }
 
-    async getServiceGraph(request: GetServiceGraphRequest): Promise<GetServiceGraphResponse> {
+    async getServiceGraph(
+        request: GetServiceGraphRequest
+    ): Promise<GetServiceGraphResponse> {
         try {
             const httpResponse: any = await this._get('/api/dependencies', {
-                'endTs': request.endTS,
-                'lookback': request.lookback,
+                endTs: request.endTS,
+                lookback: request.lookback,
             });
 
             return {
-                graphEdges: httpResponse.data
+                graphEdges: httpResponse.data,
             } as GetServiceGraphResponse;
         } catch (err: any) {
             return this._handleError(err);

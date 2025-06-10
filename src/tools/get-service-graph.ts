@@ -27,24 +27,20 @@ export class GetServiceGraph implements Tool {
                 .positive()
                 .describe(
                     '(in milliseconds) - the length the time interval (i.e. start-time + lookback = end-time).'
-                )
+                ),
         };
     }
 
     async handle(
         server: Server,
         jaegerClient: JaegerClient,
-        {
-            endTs,
-            lookback,
-        }: any,
+        { endTs, lookback }: any
     ): Promise<string> {
-        const response: GetServiceGraphResponse = await jaegerClient.getServiceGraph(
-            {
+        const response: GetServiceGraphResponse =
+            await jaegerClient.getServiceGraph({
                 endTS: endTs,
                 lookback: lookback,
-            }
-        );
+            });
         return JSON.stringify(response.graphEdges);
     }
 }
