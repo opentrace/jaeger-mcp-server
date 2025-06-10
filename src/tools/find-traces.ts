@@ -26,30 +26,12 @@ export class FindTraces implements Tool {
                 )
                 .optional(),
             attributes: z
-                .record(z.string(), z.string().or(z.number().or(z.boolean())))
+                .string()
                 .describe(
                     'Filters spans by span attributes. ' +
-                        'Attributes can be passed in key/value format in JSON where ' +
-                        'keys can be string and values can be string, number (integer or double) or boolean. \n' +
-                        'For example: \n' +
-                        '{' +
-                        '\n' +
-                        '\t' +
-                        '"stringAttribute": "str"' +
-                        ',' +
-                        '\n' +
-                        '\t' +
-                        '"integerAttribute": 123' +
-                        ',' +
-                        '\n' +
-                        '\t' +
-                        '"doubleAttribute": 123.456' +
-                        ',' +
-                        '\n' +
-                        '\t' +
-                        '"booleanAttribute": true' +
-                        '\n' +
-                        '}'
+                        'Attributes should be passed as a comma-separated list of key=value pairs. ' +
+                        'Values can be strings, numbers, or booleans. ' +
+                        'For example: "stringAttribute=str,integerAttribute=123,doubleAttribute=123.456,booleanAttribute=true"'
                 )
                 .optional(),
             startTimeMin: z
@@ -98,12 +80,16 @@ export class FindTraces implements Tool {
     }
 
     private _normalizeAttributes(
-        attributes: Map<string, string | number | boolean>
+        attributes: string
     ): { [k: string]: string } {
         const normalizedAttributes: { [k: string]: string } = {};
-        if (attributes) {
-            for (let [key, value] of Object.entries(attributes)) {
-                normalizedAttributes[key] = value.toString();
+        if (attributes && attributes.trim()) {
+            const pairs = attributes.split(',');
+            for (const pair of pairs) {
+                const [key, value] = pair.split('=', 2);
+                if (key && value !== undefined) {
+                    normalizedAttributes[key.trim()] = value.trim();
+                }
             }
         }
         return normalizedAttributes;
