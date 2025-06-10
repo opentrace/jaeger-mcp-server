@@ -232,9 +232,10 @@ export class JaegerHttpClient implements JaegerClient {
                 'query.search_depth': request.query.searchDepth,
             });
             return {
-                resourceSpans: this._normalizeResourceSpans(
-                    httpResponse.result.resourceSpans
-                ),
+                // returns {"result":{}} if no traces found
+                resourceSpans: httpResponse.result.resourceSpans
+                    ? this._normalizeResourceSpans(httpResponse.result.resourceSpans)
+                    : [],
             };
         } catch (err: any) {
             return this._handleError(err);
